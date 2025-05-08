@@ -5,8 +5,8 @@
 #include <iomanip>
 
 const double PI = 3.141592653589793;
-const double TOLERANCE = 0.15;
-const double STEP = 0.005;
+const double TOLERANCE = 0.15; // допустимая погрешность при проверке углов
+const double STEP = 0.005; // шаг перебора значений радиусов
 
 // Угол между двумя внешними дисками, касающимися центрального
 double angle(double R, double a, double b) {
