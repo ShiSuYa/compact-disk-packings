@@ -25,4 +25,5 @@ bool decodeRegions(std::istream& stream, RegionData& output);
 }
 
 
-#endif // DISKPACK_CODEC_H
+#endif
+
