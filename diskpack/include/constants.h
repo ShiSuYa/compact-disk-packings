@@ -189,4 +189,5 @@ static const std::vector<std::pair<Interval, Interval>> THREE_RADII = {
 }
 
 
-#endif // DISKPACK_RADII_DATA_H
+#endif
+
