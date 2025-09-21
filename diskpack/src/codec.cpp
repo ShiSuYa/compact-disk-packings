@@ -21,7 +21,7 @@ void writeSvgHeader(std::ofstream& svg, double radius) {
         << "  <g transform=\"scale(1, -1)\">\n";
 }
 
-} // namespace
+}
 
 void exportToSVG(const std::string& filename, 
                 const std::list<Disk>& disks,
@@ -101,6 +101,7 @@ bool decodeRegionsInternal(const nlohmann::json& data, RegionData& output) {
     return !output.radii.empty();
 }
 
-} // namespace
+}
 
-} // namespace diskpack
+
+}
