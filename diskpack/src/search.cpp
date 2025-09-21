@@ -9,7 +9,6 @@
 
 namespace diskpack {
 
-/// RegionAggregator (DTSP-версия DSUFilter)
 size_t RegionAggregator::findParent(size_t x) {
     parent_[x] = (parent_[x] == x ? x : findParent(parent_[x]));
     return parent_[x];
@@ -52,7 +51,6 @@ void RegionAggregator::operator()(std::vector<RadiiRegion> &elements) {
         for (size_t j = 0; j < edge.size(); ++j) {
             auto interval = edge[j];
 
-            // lower endpoint as key
             edge[j] = Interval{ interval.lower(), interval.lower() };
             auto it = edgesMap_.find(edge);
             if (it != edgesMap_.end()) {
@@ -61,7 +59,6 @@ void RegionAggregator::operator()(std::vector<RadiiRegion> &elements) {
                 edgesMap_[edge] = i;
             }
 
-            // upper endpoint as key
             edge[j] = Interval{ interval.upper(), interval.upper() };
             it = edgesMap_.find(edge);
             if (it != edgesMap_.end()) {
@@ -70,7 +67,6 @@ void RegionAggregator::operator()(std::vector<RadiiRegion> &elements) {
                 edgesMap_[edge] = i;
             }
 
-            // restore original interval
             edge[j] = interval;
         }
     }
@@ -83,14 +79,12 @@ void RegionAggregator::operator()(std::vector<RadiiRegion> &elements) {
     }
 }
 
-/// RegionExplorer (DTSP-версия Searcher)
 RegionExplorer::RegionExplorer(std::vector<RadiiRegion> &results, BaseType lowerBound, BaseType upperBound)
     : resultsRef_(results), lowerBound_(lowerBound), upperBound_(upperBound) {}
 
 void RegionExplorer::processRegion(const RadiiRegion &region,
                                    std::vector<RadiiRegion> &outRegions,
                                    std::optional<ConnectivityGraph> &graph) {
-    // Если регион не слишком широкий — подготавливаем (или уточняем) connectivity graph
     if (!region.IsTooWide(upperBound_)) {
         if (!graph.has_value()) {
             OperatorLookupTable lookup_table(region.GetIntervals());
@@ -114,7 +108,6 @@ void RegionExplorer::processRegion(const RadiiRegion &region,
         }
     }
 
-    // Если регион достаточно узкий — делаем "дорогую" проверку
     if (region.IsNarrowEnough(lowerBound_)) {
         if (expensiveCheck(region.GetIntervals())) {
             outRegions.emplace_back(region.GetIntervals());
@@ -127,7 +120,6 @@ void RegionExplorer::processRegion(const RadiiRegion &region,
         return;
     }
 
-    // Иначе делим регион и рекурсивно обрабатываем детей
     std::vector<RadiiRegion> childrenRegions;
     region.GridSplit(childrenRegions, 2);
     for (auto &cr : childrenRegions) {
@@ -142,19 +134,16 @@ void RegionExplorer::processRegion(const RadiiRegion &region,
 }
 
 bool RegionExplorer::expensiveCheck(const RadiiRegion & /*region*/) {
-    // TODO: реализация дорогой проверки (оставлено как в оригинале)
     return true;
 }
 
 void RegionExplorer::startProcessing(const std::vector<Interval> &intervals, size_t concurrency) {
-    // Сортируем интервалы для стабильности
     std::vector<Interval> sortedIntervals = intervals;
     std::sort(sortedIntervals.begin(), sortedIntervals.end(),
               [](const Interval &a, const Interval &b) { return cerlt(a, b); });
 
     RadiiRegion rootRegion(sortedIntervals);
 
-    // Разбиваем корневой регион на первичные задачи (1 * concurrency)
     std::vector<RadiiRegion> primaryChildren;
     rootRegion.GridSplit(primaryChildren, 1 * concurrency);
 
@@ -198,14 +187,13 @@ void RegionExplorer::startProcessing(const std::vector<Interval> &intervals, siz
     }
     std::cerr << "\ninitial result size:\t" << resultsRef_.size() << "\n";
 
-    // Свести соседние маленькие регионы в большие компоненты
     RegionAggregator{}(resultsRef_);
 
-    // Отсортировать и вернуть
     std::sort(resultsRef_.begin(), resultsRef_.end(),
               [](const RadiiRegion &a, const RadiiRegion &b) {
                   return RadiiCompare{}(a.GetIntervals(), b.GetIntervals());
               });
 }
 
-} // namespace diskpack
+
+}
