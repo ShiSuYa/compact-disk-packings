@@ -26,4 +26,3 @@ bool decodeRegions(std::istream& stream, RegionData& output);
 
 
 #endif
-
