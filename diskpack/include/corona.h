@@ -124,4 +124,5 @@ private:
 }
 
 
-#endif // DISKPACK_CORONA_H
+#endif
+
