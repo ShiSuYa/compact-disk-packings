@@ -7,7 +7,6 @@
 
 namespace diskpack {
 
-// Предопределенные интервалы радиусов для случаев с двумя дисками
 static const std::vector<Interval> TWO_RADII = {
     {0.637555977, 0.637555978}, 
     {0.545151042, 0.545151043},
@@ -20,7 +19,6 @@ static const std::vector<Interval> TWO_RADII = {
     {0.101020514, 0.101020515}
 };
 
-// Предопределенные пары интервалов радиусов для случаев с тремя дисками
 static const std::vector<std::pair<Interval, Interval>> THREE_RADII = {
     {{0.414213, 0.414215}, {0.154700, 0.154702}},
     {{0.280775, 0.280777}, {0.154700, 0.154702}},
@@ -188,6 +186,7 @@ static const std::vector<std::pair<Interval, Interval>> THREE_RADII = {
     {{0.386105, 0.386107}, {0.149077, 0.149079}},
 };
 
-} // namespace diskpack
+}
+
 
 #endif // DISKPACK_RADII_DATA_H
