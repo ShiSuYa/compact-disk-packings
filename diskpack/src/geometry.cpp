@@ -5,7 +5,6 @@
 
 namespace diskpack {
 
-// ===================== Interval =====================
 bool Interval::Contains(BaseType value) const {
     return (low - EPSILON) <= value && value <= (high + EPSILON);
 }
@@ -26,7 +25,6 @@ bool Interval::IsValid() const {
     return low <= high + EPSILON;
 }
 
-// ===================== Disk =====================
 BaseType Disk::DistanceTo(const Disk& other) const {
     BaseType dx = center.x - other.center.x;
     BaseType dy = center.y - other.center.y;
@@ -64,7 +62,6 @@ BaseType Disk::GetPrecision() const {
     });
 }
 
-// ===================== DiskTransform =====================
 Point DiskTransform::Apply(const Point& p) const {
     return {
         p.x * x.high - p.y * y.high,
@@ -84,7 +81,6 @@ DiskTransform DiskTransform::FromDisks(const Disk& base, const Disk& prev, const
     const auto& pr = prev.radius;
     const auto& nr = next.radius;
 
-    // Calculate x component
     Interval x;
     if (prev.type == base.type) {
         x = {0.5, 0.5};
@@ -112,7 +108,6 @@ DiskTransform DiskTransform::FromDisks(const Disk& base, const Disk& prev, const
         x = {first_term_high + second_term_high, first_term_low + second_term_low};
     }
 
-    // Calculate y component
     Interval y;
     BaseType t_high = nr.high/(br.high + pr.high);
     BaseType t_low = nr.low/(br.low + pr.low);
@@ -139,7 +134,6 @@ DiskTransform DiskTransform::FromDisks(const Disk& base, const Disk& prev, const
     return {x, y};
 }
 
-// ===================== DiskRegion =====================
 DiskRegion::DiskRegion(const std::vector<Interval>& intervals) 
     : intervals(intervals) {
     if (intervals.empty()) {
@@ -225,7 +219,6 @@ Interval DiskRegion::GetMaxInterval() const {
         });
 }
 
-// ===================== DiskOperatorTable =====================
 DiskOperatorTable::DiskOperatorTable(const std::vector<Interval>& radii)
     : radii(radii),
       transforms(radii.size() * radii.size() * radii.size()),
@@ -251,7 +244,6 @@ const DiskTransform& DiskOperatorTable::GetTransform(size_t base, size_t prev, s
     return transforms[idx];
 }
 
-// ===================== Utility Functions =====================
 namespace utils {
 
 bool CompareByNorm(const Disk& a, const Disk& b) {
@@ -266,19 +258,17 @@ bool CompareClockwise(const Disk& a, const Disk& b, const Point& center) {
     BaseType bx = b.center.x - center.x;
     BaseType by = b.center.y - center.y;
 
-    // Handle special cases for disks on positive x-axis
     if (ax > -EPSILON && std::abs(ay) <= EPSILON) return true;
     if (bx > -EPSILON && std::abs(by) <= EPSILON) return false;
 
-    // Check if disks are in different half-planes
     if (ay * by < -EPSILON) return ay > EPSILON;
 
-    // Compare angles using cross product
     BaseType cross = bx * ay - by * ax;
     return cross > EPSILON || 
           (std::abs(cross) <= EPSILON && CompareByNorm(a, b));
 }
 
-} // namespace utils
+}
 
-} // namespace diskpack
+
+}
