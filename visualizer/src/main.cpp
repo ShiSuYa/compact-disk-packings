@@ -17,7 +17,6 @@ using diskpack::PackingStatus;
 
 namespace po = boost::program_options;
 
-// Значения по умолчанию
 constexpr size_t    SIZE_LIMIT_DEFAULT       = 200;
 constexpr BaseType  RADIUS_LIMIT_DEFAULT     = 5;
 constexpr BaseType  PRECISION_LIMIT_DEFAULT  = 0.5;
@@ -33,7 +32,6 @@ int main(int argc, char* argv[]) {
     std::string outputPath     = DEFAULT_OUTPUT_PATH;
 
     try {
-        // Определяем и описываем аргументы командной строки
         po::options_description opts("Параметры запуска");
         opts.add_options()
             ("help,h", "Показать справку")
@@ -60,13 +58,11 @@ int main(int argc, char* argv[]) {
         }
         po::notify(vm);
 
-        // Читаем параметры
         diskCountLimit = vm["number-of-disks"].as<size_t>();
         precisionLimit = vm["precision"].as<BaseType>();
         regionRadius   = vm["region-size"].as<BaseType>();
         outputPath     = vm["output"].as<std::string>();
 
-        // Проверка на корректность выбора источника радиусов
         const bool i2Set    = vm.count("i2");
         const bool i3Set    = vm.count("i3");
         const bool inputSet = vm.count("input");
@@ -111,12 +107,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Сортируем радиусы
     std::sort(radiiSet.begin(), radiiSet.end(), diskpack::cerlt);
     std::cerr << "Visualizer data: " 
               << diskpack::EncodeRegionsJSON({ {radiiSet} });
 
-    // Генерация упаковки
     BasicGenerator generator(radiiSet, regionRadius, precisionLimit, diskCountLimit);
 
     auto start = Clock::now();
@@ -133,4 +127,5 @@ int main(int argc, char* argv[]) {
     }
 
     return 0;
+
 }
