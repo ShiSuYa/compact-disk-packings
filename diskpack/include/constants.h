@@ -190,4 +190,3 @@ static const std::vector<std::pair<Interval, Interval>> THREE_RADII = {
 
 
 #endif
-
