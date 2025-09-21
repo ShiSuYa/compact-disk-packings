@@ -1,12 +1,11 @@
 #include <diskpack/generator.h>
 #include <iostream>
-#include <numeric>  // для std::iota
-#include <algorithm> // для std::shuffle, std::any_of, std::count
-#include <cmath> // для sqrt
+#include <numeric>
+#include <algorithm>
+#include <cmath>
 
 namespace diskpack {
 
-// Используемое приватное поле генератора случайных чисел
 static std::random_device random_device_source;
 
 PackingBuilderBase::PackingBuilderBase(const std::vector<Interval>& radii_,
@@ -42,10 +41,8 @@ GenerationResult PackingBuilderBase::generate(const size_t& centerDiskType) {
 
     reset();
 
-    // Начинаем упаковку с центрального диска
     pushDisk(Disk(zero, zero, diskRadii[centerDiskType], centerDiskType), centerDiskType);
 
-    // Добавляем второй диск разных радиусов по очереди
     for (size_t i = 0; i < diskRadii.size(); ++i) {
         if (i == centerDiskType && diskRadii.size() > 1) {
             continue;
@@ -233,4 +230,5 @@ std::ostream& operator<<(std::ostream& out, GenerationResult result) {
     return out;
 }
 
-} // namespace diskpack
+
+}
