@@ -1,0 +1,35 @@
+/build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+/compile_commands.json
+bin/
+lib/
+lib64/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+*~
+*.swp
+*.swo
+*.log
+*.tmp
+*.zip
+*.tar.gz
+*.7z
+*.rar
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+.ipynb_checkpoints/
+# assets/animations/*.gif
+# *.json
+# *.yaml
