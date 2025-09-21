@@ -17,7 +17,6 @@ class ConnectivityGraph;
 using DiskPointer = std::shared_ptr<Disk>;
 using CoronaSignaturePointer = std::shared_ptr<CoronaSignature>;
 
-/// Stores information about disk adjacency patterns
 class CoronaSignature {
 public:
     explicit CoronaSignature(const Corona& corona);
@@ -38,7 +37,6 @@ private:
     size_t getAdjacency(size_t i, size_t j) const;
 };
 
-/// Manages disk connectivity patterns
 class ConnectivityGraph {
 public:
     static constexpr size_t MAX_SIGNATURES = 5000;
@@ -77,7 +75,6 @@ private:
     size_t getTransition(size_t base, size_t i, size_t j) const;
 };
 
-/// Represents a ring of disks around central disk
 class Corona {
 public:
     Corona(const Disk& base, const std::vector<DiskPointer>& packing,
@@ -124,6 +121,7 @@ private:
     friend class ConnectivityGraph;
 };
 
-} // namespace diskpack
+}
+
 
 #endif // DISKPACK_CORONA_H
